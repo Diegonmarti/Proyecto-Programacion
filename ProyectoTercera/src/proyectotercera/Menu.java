@@ -25,10 +25,6 @@ public class Menu {
             System.out.println("4. SALIR");
             palabra = entrada.nextLine();
          
-             if(palabra!="RESERVAR"||palabra!="ANULAR"||palabra!="CONSULTAR"||palabra!="SALIR"){
-                System.out.println("Introducción por teclado erronea... Por favor, introduzca alguna de las opciones marcadas.");
-              }
-         
             switch (palabra.toUpperCase()) {
 
                 case "RESERVAR":
@@ -64,10 +60,7 @@ public class Menu {
      //       System.out.println("3. CONSULTAR");
      //       System.out.println("4. SALIR");
      //       palabra = entrada.nextLine();
-         
-     //        if(palabra!="RESERVAR"||palabra!="ANULAR"||palabra!="CONSULTAR"||palabra!="SALIR"){
-     //           System.out.println("Introducción por teclado erronea... Por favor, introduzca alguna de las opciones marcadas.");
-              }
+ 
     //        switch (palabra.toUpperCase()) {
 
     //            case "RESERVAR":
