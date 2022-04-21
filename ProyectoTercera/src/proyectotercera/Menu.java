@@ -27,9 +27,9 @@ public class Menu {
             System.out.println("2. ANULAR");
             System.out.println("3. CONSULTAR");
             System.out.println("4. SALIR");
-            palabra = entrada.nextLine();
+            palabra = entrada.nextLine().toUpperCase();
          
-            switch (palabra.toUpperCase()) {
+            switch (palabra) {
 
                 case "RESERVAR":
                     ReservarCita();
@@ -47,7 +47,7 @@ public class Menu {
                 default:
                     System.out.println("Opción errónea...\n");
             }
-        } while (palabra != "SALIR");
+        } while (!palabra.equals("SALIR"));
     }
 
     private static void ReservarCita() {
@@ -68,11 +68,11 @@ public class Menu {
     }
 
     private static void AnularCita() {
-        System.out.print("\nIndique Cita: ");
+        System.out.print("\nIndique cita para anular: ");
         int citas = Integer.parseInt(entrada.nextLine());
-        System.out.print("Hora: ");
+        System.out.print("Hora que quiera anular: ");
         String hora = entrada.nextLine();
-        System.out.print("Nombre: ");
+        System.out.print("Nombre del archivo para anular: ");
         String nombre = entrada.nextLine();
 
         cita[citas].anularReserva(nombre, hora);

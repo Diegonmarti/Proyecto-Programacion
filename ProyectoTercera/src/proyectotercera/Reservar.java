@@ -31,7 +31,7 @@ public class Reservar {
     }
 
     public void hacerReserva(ReservarConst reserva) {
-        int pos = getPosArray(reserva.getHora());
+        int pos = getPosArray(reserva.getApellido());
         if (reservas[pos] != null) {
             System.out.println("Esta HORA ya está reservada");
         } else {

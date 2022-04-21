@@ -31,6 +31,9 @@ public class Hora {
         if (horaInicio >= 8 && horaInicio <= 20) {//compruebo si está en el rango, si lo está
             //numAlumnos lo pongo a 0
             numAlumnos = 0;
+//            this.nomAlumno1 = ""; HABLAR CON EL JEFE VICTOR 
+//            this.telAlumno1 = 0;
+//            this.emailAlumno1 = "";
         }
     }
 
