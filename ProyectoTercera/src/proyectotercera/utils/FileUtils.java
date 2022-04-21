@@ -49,7 +49,7 @@ public abstract class FileUtils {
         }
     }
     
-    public static <T extends ISerializable> void parsearArchivo(String nombre, T outObj) {
+    public static void parsearArchivo(String nombre, ISerializable outObj) {
         outObj.fromSerializedData(leerArchivo(nombre));
     }
 }
