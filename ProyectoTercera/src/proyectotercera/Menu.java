@@ -21,8 +21,14 @@ public class Menu {
 
             System.out.println("1. RESERVAR");
             System.out.println("2. ANULAR");
-            System.out.println("3. SALIR");
+            System.out.println("3. CONSULTAR");
+            System.out.println("4. SALIR");
             palabra = entrada.nextLine();
+         
+             if(palabra!="RESERVAR"||palabra!="ANULAR"||palabra!="CONSULTAR"||palabra!="SALIR"){
+                System.out.println("Introducción por teclado erronea... Por favor, introduzca alguna de las opciones marcadas.");
+              }
+         
             switch (palabra.toUpperCase()) {
 
                 case "RESERVAR":
@@ -53,11 +59,15 @@ public class Menu {
      //       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
      //       System.out.println("Introduce el nombre del fichero de reservas a leer");
             //Hacer el Scanner que llame al fichero
-
-    //        System.out.println("1. RESERVAR");
-    //        System.out.println("2. ANULAR");
-    //        System.out.println("3. SALIR");
-    //        palabra = entrada.nextLine();
+     //       System.out.println("1. RESERVAR");
+     //       System.out.println("2. ANULAR");
+     //       System.out.println("3. CONSULTAR");
+     //       System.out.println("4. SALIR");
+     //       palabra = entrada.nextLine();
+         
+     //        if(palabra!="RESERVAR"||palabra!="ANULAR"||palabra!="CONSULTAR"||palabra!="SALIR"){
+     //           System.out.println("Introducción por teclado erronea... Por favor, introduzca alguna de las opciones marcadas.");
+              }
     //        switch (palabra.toUpperCase()) {
 
     //            case "RESERVAR":
