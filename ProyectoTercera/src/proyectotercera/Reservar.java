@@ -9,7 +9,17 @@ public class Reservar {
     public Reservar() {
         reservas = new ReservarConst[3];
     }
-
+    
+    //private int getPosArray(String hora) {
+    //    for(int i=0;i<reservas.length;i++){
+    //        if(hora.equals(i){
+    //            return i;
+    //        }else{
+    //            return -1; //En realidad tendría que saltar una exception o poner un mensaje de error
+    //        }
+    //    }
+   // }
+    
     private int getPosArray(String hora) {
         if (hora.equals("9:00")) {
             return 0;
