@@ -8,11 +8,6 @@ public class Menu {
     private static Scanner entrada;
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-
-=======
-       // Menu();
->>>>>>> 243b5f910b8fffdaa935f953f1082fb9a2644cd2
         entrada = new Scanner(System.in);
         cita = new Reservar[10];
         for (int i = 0; i < cita.length; i++) {
@@ -54,7 +49,6 @@ public class Menu {
             }
         } while (palabra != "SALIR");
     }
-<<<<<<< HEAD
 
     private static void ReservarCita() {
         System.out.print("\nIndique Citas: ");
@@ -101,42 +95,4 @@ public class Menu {
             System.out.println("\nNo hay citas disponibles para esa hora");
         }
     }
-=======
-   // public static void Menu (){
-   //     entrada = new Scanner(System.in);
-//
-  //      Scanner entrada = new Scanner(System.in);
-    //    String palabra;
-    //    do {
-    //        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    //        System.out.println(">Programa de reservas de Tutorías>");
-     //       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-     //       System.out.println("Introduce el nombre del fichero de reservas a leer");
-            //Hacer el Scanner que llame al fichero
-     //       System.out.println("1. RESERVAR");
-     //       System.out.println("2. ANULAR");
-     //       System.out.println("3. CONSULTAR");
-     //       System.out.println("4. SALIR");
-     //       palabra = entrada.nextLine();
- 
-    //        switch (palabra.toUpperCase()) {
-
-    //            case "RESERVAR":
-                    // menuReservar;
-    //                break;
-    //            case "ANULAR":
-                    // menuAnular;
-    //                break;
-    //            case "CONSULTAR":
-                    // menuConsultar
-    //                break;
-    //            case "SALIR":
-    //                System.out.println("Salir del programa");
-    //                break;
-    //            default:
-    //                System.out.println("Opción errónea...\n");
-    //        }
-    //    } while (palabra != "SALIR");
-    // }
->>>>>>> 243b5f910b8fffdaa935f953f1082fb9a2644cd2
 }
