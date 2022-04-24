@@ -14,9 +14,8 @@ public abstract class FileUtils {
     
     public static boolean escribirArchivo(String nombre, String texto) {
         PrintWriter pw = null;
-        File f;
+        File f = new File(RUTA_BASE + nombre);
         
-        f = new File(RUTA_BASE + nombre);
         if(f.getParentFile() != null && !f.getParentFile().exists()) {
             f.getParentFile().mkdirs();
         }

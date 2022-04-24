@@ -13,8 +13,7 @@ public class Reservar {
         for (int i = 0; i < cita.length; i++) {
             cita[i] = new Reservar();
         }*/
-
-        Scanner entrada = new Scanner(System.in);
+        
         String palabra;
         do {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");

@@ -1,7 +1,5 @@
 package proyectotercera;
 
-import java.util.Arrays;
-import java.util.Scanner;
 import proyectotercera.utils.ISerializable;
 
 public class Hora implements ISerializable {
@@ -11,7 +9,6 @@ public class Hora implements ISerializable {
     private String nomAlumno1="";//tanto nombre como apellidos
     private int telAlumno1=0;
     private String emailAlumno1="";
-    static Scanner sc = new Scanner(System.in);
 
    public Hora(byte horaInicio) {
         this.horaInicio = horaInicio;

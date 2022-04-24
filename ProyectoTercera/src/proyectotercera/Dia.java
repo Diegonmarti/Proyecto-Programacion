@@ -2,14 +2,12 @@ package proyectotercera;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 import proyectotercera.utils.ISerializable;
 
 public class Dia implements ISerializable {
 
     public String etiquetaDia;
     public ArrayList<Hora> entradasHora = new ArrayList();  //Llama a hora
-    static Scanner sc = new Scanner(System.in);
 
     public Dia(ArrayList<Hora> entradasHora) {
         this.entradasHora = entradasHora;
