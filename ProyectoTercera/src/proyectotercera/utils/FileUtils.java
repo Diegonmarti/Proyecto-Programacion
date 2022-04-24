@@ -12,7 +12,7 @@ public abstract class FileUtils {
         return new File(RUTA_BASE + nombre).exists();
     }
     
-    public static boolean escribirArchivo(String nombre, String texto) {
+    public static void escribirArchivo(String nombre, String texto) {
         PrintWriter pw = null;
         File f = new File(RUTA_BASE + nombre);
         
@@ -26,12 +26,10 @@ public abstract class FileUtils {
         
         pw.print(texto);
         pw.close();
-        
-        return true;
     }
     
-    public static boolean escribirArchivo(String nombre, ISerializable obj) {
-        return escribirArchivo(nombre, obj.toSerializedData());
+    public static void escribirArchivo(String nombre, ISerializable obj) {
+        escribirArchivo(nombre, obj.toSerializedData());
     }
     
     public static String leerArchivo(String nombre) {

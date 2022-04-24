@@ -1,7 +1,9 @@
 package proyectotercera;
 
 import java.util.Scanner;
- 
+
+
+// Pendiende Ampliacion: Mas de un alumno/una reserva por hora
 public class Reservar {
 
     //private static Reservar[] cita;

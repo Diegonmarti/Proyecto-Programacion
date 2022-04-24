@@ -9,8 +9,8 @@ public class Dia implements ISerializable {
     public String etiquetaDia;
     public ArrayList<Hora> entradasHora = new ArrayList();  //Llama a hora
 
-    public Dia(ArrayList<Hora> entradasHora) {
-        this.entradasHora = entradasHora;
+    public Dia(String etiquetaDia) {
+        this.etiquetaDia = etiquetaDia;
     }
     public Dia() {}
 
