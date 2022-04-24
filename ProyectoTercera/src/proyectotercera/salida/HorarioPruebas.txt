@@ -1,0 +1,21 @@
+%N$Juan Perez
+%D$09/03/2022
+%H$09
+%H$11
+%H$12
+%D$12/03/2022
+%H$08
+%H$15
+%C$Pepe$400111222$pepe43@nomail.com
+%H$20
+%C$Roberto$456000654$elrober@nomail.com
+%D$17/04/2022
+%H$09
+%H$10
+%C$Roberto$456000654$elrober@nomail.com
+%H$11
+%C$Pepe$400111222$pepe43@nomail.com
+%H$12
+%H$13
+%C$Fran$303404505$fransisco@nomail.com
+%H$14

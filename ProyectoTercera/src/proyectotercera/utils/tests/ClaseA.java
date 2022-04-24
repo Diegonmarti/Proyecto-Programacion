@@ -27,11 +27,11 @@ public class ClaseA implements ISerializable {
     }
 
     @Override
-    public void fromSerializedData(String data) {
-        String[] lines = data.split("\n");
-        horaInicio = Byte.parseByte(lines[0].substring(3));
-        nombre = lines[1].substring(3).split("\\$")[0];
-        mail = lines[1].substring(3).split("\\$")[1];
+    public int fromSerializedData(String[] data) {
+        horaInicio = Byte.parseByte(data[0].substring(3));
+        nombre = data[1].substring(3).split("\\$")[0];
+        mail = data[1].substring(3).split("\\$")[1];
+        return 0;
     }
     
 }
