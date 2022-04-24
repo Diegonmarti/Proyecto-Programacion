@@ -28,7 +28,6 @@ public abstract class FileUtils {
         pw.print(texto);
         pw.close();
         
-        if(pw != null) pw.close();
         return true;
     }
     
@@ -44,7 +43,6 @@ public abstract class FileUtils {
             while(sc.hasNextLine()) {
                 datos += sc.nextLine()+"\n";
             }
-            sc.close();
             return datos;
         } catch(FileNotFoundException e) {
             return null;

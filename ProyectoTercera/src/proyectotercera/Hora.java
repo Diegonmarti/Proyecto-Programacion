@@ -87,7 +87,7 @@ public class Hora implements ISerializable {
         int i;
         for(i=0;i<data.length;i++) {
             if(data[i].startsWith("%H$") && !rellenaHora)  {
-                this.horaInicio = Byte.parseByte(data[0].substring(3));
+                this.horaInicio = Byte.parseByte(data[i].substring(3));
                 rellenaHora = true;
             }else if(data[i].startsWith("%C$") && rellenaHora && this.numAlumnos == 0) {
                 String[] datos = data[i].substring(3).split("\\$");
@@ -95,7 +95,7 @@ public class Hora implements ISerializable {
                 this.telAlumno1 = Integer.parseInt(datos[1]);
                 this.emailAlumno1 = datos[2];
                 this.numAlumnos++;
-            }else {
+            }else if(rellenaHora) {
                 break;
             }
         }
