@@ -8,6 +8,10 @@ import java.util.Scanner;
 public abstract class FileUtils {
     private static final String RUTA_BASE = "src\\proyectotercera\\salida\\";
     
+    public static boolean existe(String nombre) {
+        return new File(RUTA_BASE + nombre).exists();
+    }
+    
     public static boolean escribirArchivo(String nombre, String texto) {
         PrintWriter pw = null;
         File f;
