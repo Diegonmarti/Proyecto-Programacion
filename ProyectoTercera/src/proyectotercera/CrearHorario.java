@@ -35,12 +35,12 @@ public class CrearHorario {
     public static void pedirNombre() {
         String input;
         boolean fin = false;
-        while (!fin) {
+        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
             System.out.print("Nombre del profesor: ");
-            input = entrada.nextLine();
-            if(input.length() > 0) {
-                horario = new Reservas(input);
-                fin = true;
+            input = entrada.nextLine();  //metes el nombre que quieras
+            if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
+                horario = new Reservas(input); //si la entrada es correcta te lo mete en Reservas
+                fin = true;  //sale
             } else {
                 System.out.println("ERROR: No puede dejar el nombre en blanco.");
             }
@@ -50,18 +50,18 @@ public class CrearHorario {
     public static void pedirDias() {
         String input;
         boolean fin = false;
-        while (!fin) {
-            input = entrada.nextLine();
-            if(input.length() > 0) {
-                if(input.equalsIgnoreCase("FIN")) {
-                    if(horario.entradasDia.size() > 0) {
+        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+            input = entrada.nextLine(); //Metes un día
+            if(input.length() > 0) {   //Si ha metido un valor
+                if(input.equalsIgnoreCase("FIN")) { 
+                    if(horario.entradasDia.size() > 0) {  //si la entrada es > 0 puedes hacer fin 
                         fin = true;
                     } else {
                         System.out.println("ERROR: Introduce por lo menos un dia.");
                     }
                 }else {
                     try {
-                        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+                        DateFormat df = new SimpleDateFormat("dd/MM/yy");  //Meter este formato
                         df.setLenient(false);
                         df.parse(input);
                         horario.addContenido(new Dia(input));
@@ -111,11 +111,11 @@ public class CrearHorario {
         String nombre = "";
         boolean fin = false;
         while (!fin) {
-            nombre = entrada.nextLine();
-            if(nombre.length() > 0) {
-                if(nombre.matches(".*[\\/:\\*\\?\"<>\\|].*")){
+            nombre = entrada.nextLine(); //meter el nombre del fichero
+            if(nombre.length() > 0) {  //Al menos meter un carácter
+                if(nombre.matches(".*[\\/:\\*\\?\"<>\\|].*")){ //que no meta ninguno de estos símbolos
                     System.out.println("ERROR: Nombre de archivo no válido.");
-                }else {
+                }else {  //si lo mete todo bien, puede salir
                     fin = true;
                 }
             } else {
