@@ -26,7 +26,7 @@ public class CrearHorario {
         System.out.println("Perfecto, indica ahora las horas de inicio de cada sesión de reserva. Cuando no quieras introducir más horas, escribe FIN: ");
         pedirHora();
         // Entrada nombre archivo
-        System.out.println("Por último, introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");   
+        System.out.println("Por último, introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");
         archivo();
         // FIN
         System.out.println("Fichero creado. Muchas gracias :)");
@@ -37,7 +37,7 @@ public class CrearHorario {
         boolean fin = false;
         while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
             System.out.print("Nombre del profesor: ");
-            input = entrada.nextLine();  //metes el nombre que quieras
+            input = entrada.nextLine().trim();  //metes el nombre que quieras
             if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
                 horario = new Reservas(input); //si la entrada es correcta te lo mete en Reservas
                 fin = true;  //sale
@@ -77,7 +77,7 @@ public class CrearHorario {
         }
     }
 
-    public static void pedirHora(){
+    public static void pedirHora() {
         String input;
         byte horaInicial;
         boolean fin = false;
@@ -107,15 +107,34 @@ public class CrearHorario {
         }
     }
 
-    public static void archivo(){
+    public static void archivo() {
         String nombre = "";
         boolean fin = false;
+        boolean primeraIteracion = true;
         while (!fin) {
-            nombre = entrada.nextLine(); //meter el nombre del fichero
+            if(!primeraIteracion) {
+                System.out.println("Introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");
+            }
+            primeraIteracion = false;
+            nombre = entrada.nextLine().trim(); //meter el nombre del fichero
             if(nombre.length() > 0) {  //Al menos meter un carácter
-                if(nombre.matches(".*[\\/:\\*\\?\"<>\\|].*")){ //que no meta ninguno de estos símbolos
+                if(nombre.matches(".*[\\\\/:\\*\\?\"<>\\|].*")){ //que no meta ninguno de estos símbolos
                     System.out.println("ERROR: Nombre de archivo no válido.");
                 }else {  //si lo mete todo bien, puede salir
+                    if(!nombre.endsWith(".txt")) {
+                        nombre += ".txt";
+                    }
+
+                    if(FileUtils.existe(nombre)) {
+                        System.out.println("El fichero " + nombre + " ya existe, si desea sobreescribirlo, introduzca SI.");
+                        String opcion = entrada.nextLine();
+
+                        if(opcion.equalsIgnoreCase("SI")) {
+                            System.out.println("Sobrescribiendo...");  
+                        }else {
+                            continue;
+                        }
+                    }
                     fin = true;
                 }
             } else {
