@@ -2,12 +2,14 @@ package proyectotercera;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
 import proyectotercera.utils.ISerializable;
 
 public class Reservas implements ISerializable {
     public String etiquetaLugar;
     public String nombreTutor;
-    public ArrayList <Dia> entradasDia=new ArrayList (); //Llama a día
+    public ArrayList <Dia> entradasDia = new ArrayList<Dia>();
 
     public Reservas(String nombreTutor) {
         this.nombreTutor = nombreTutor;
@@ -21,28 +23,36 @@ public class Reservas implements ISerializable {
         }
     }
     
-    public void addContenido (Dia dia){
+    public void addContenido(Dia dia) {
         entradasDia.add(dia);
     }
 
-    public void rellenarHoras (ArrayList<Hora> horas) {
+    public boolean contiene(Dia dia) {
+        return entradasDia.contains(dia);
+    }
+
+    public void rellenarHoras(ArrayList<Hora> horas) {
         for(Dia dia : entradasDia) {
-            for(Hora hora : horas) {
-                dia.addContenido(hora);
-            }
+            dia.rellenaHoras(horas);
         }
     }
 
-    public void rellenarHoras (Hora hora) {
+    public void rellenarHoras(Hora hora) {
         for(Dia dia : entradasDia) {
             dia.addContenido(hora);
         }
+    }
+
+    public int numDias() {
+        return entradasDia.size();
     }
 
     @Override
     public String toSerializedData() {
         String out = "%N$" + this.nombreTutor + "\n";
         
+        Collections.sort(entradasDia);
+
         for(Dia dia : entradasDia) {
             out += dia.toSerializedData();
         }

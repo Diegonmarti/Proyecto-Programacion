@@ -1,13 +1,11 @@
 package proyectotercera;
 
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 import proyectotercera.utils.FileUtils;
+import proyectotercera.utils.MetodosComunes;
 
-// Pendiente Ampliacion 2.3
 public class CrearHorario {
 
     private static Scanner entrada;
@@ -27,7 +25,7 @@ public class CrearHorario {
         pedirHora();
         // Entrada nombre archivo
         System.out.println("Por último, introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");
-        archivo();
+        MetodosComunes.guardarArchivo(horario, "Introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");
         // FIN
         System.out.println("Fichero creado. Muchas gracias :)");
     }
@@ -50,61 +48,76 @@ public class CrearHorario {
     public static void pedirDias() {
         String input;
         boolean fin = false;
+        Dia d;
         while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            input = entrada.nextLine(); //Metes un día
+            input = entrada.nextLine().trim(); //Metes un día
             if(input.length() > 0) {   //Si ha metido un valor
                 if(input.equalsIgnoreCase("FIN")) { 
-                    if(horario.entradasDia.size() > 0) {  //si la entrada es > 0 puedes hacer fin 
+                    if(horario.numDias() > 0) {  //si el horario tiene entradas puedes hacer fin 
                         fin = true;
                     } else {
                         System.out.println("ERROR: Introduce por lo menos un dia.");
                     }
                 }else {
-                    try {
-                        DateFormat df = new SimpleDateFormat("dd/MM/yy");  //Meter este formato
-                        df.setLenient(false);
-                        df.parse(input);
-                        horario.addContenido(new Dia(input));
-                    } catch(ParseException e) {
+                    if(Dia.checkFecha(input)) {
+                        d = new Dia(input);
+                        if(!horario.contiene(d)) {
+                            horario.addContenido(d);
+                        }else {
+                            System.out.println("ERROR: Fecha ya existente.");
+                        }
+                    }else {
                         System.out.println("ERROR: Fecha no válida.");
                         System.out.println("Asegúrese de que la fecha tiene el formato DD/MM/AA y que sea una fecha válida.");
                     }
                 }
             } else {
-                System.out.println("ERROR: Introduzca una fecha válida.");
-                System.out.println("Asegúrese de que la fecha tiene el formato DD/MM/AA y que sea una fecha válida.");
+                System.out.println("ERROR: No puede dejar la fecha en blanco.");
             }
         }
+        
     }
 
     public static void pedirHora() {
         String input;
         byte horaInicial;
         boolean fin = false;
-        boolean introducidoHora = false;
+        ArrayList<Hora> horas = new ArrayList<Hora>();
+        Hora h;
 
         while(!fin) {
-            input = entrada.nextLine();
+            input = entrada.nextLine().trim();
             if(input.equalsIgnoreCase("FIN")) {
-                if(introducidoHora) {
+                if(horas.size() > 0) {
                     fin = true;
                 } else {
                     System.out.println("ERROR: Introduce por lo menos una hora.");
                 }
             }else {
                 if(input.matches("\\d+")) { // Usamos la expresión regular "[0-9]+" para la comprobación del if
-                    horaInicial = Byte.parseByte(input); // Lo parseamos a byte
-                    if(horaInicial >= 8 && horaInicial <= 20){
-                        horario.rellenarHoras(new Hora(horaInicial)); // lo rellenamos
-                        introducidoHora = true;
-                    } else {
+                    try {
+                        horaInicial = Byte.parseByte(input); // Lo parseamos a byte
+                        if(Hora.checkRango(horaInicial)) {
+                            h = new Hora(horaInicial);
+
+                            if(!horas.contains(h)){
+                                horas.add(h); // lo rellenamos
+                            }else {
+                                System.out.println("ERROR: Hora ya existente.");
+                            }
+                        } else {
+                            System.out.println("ERROR: Introduzca una hora entre las 8 y las 20.");
+                        }
+                    }catch(NumberFormatException e) {
                         System.out.println("ERROR: Introduzca una hora entre las 8 y las 20.");
                     }
                 } else {
-                    System.out.println("ERROR: Introduzca una hora entre las 8 y las 20 o FIN para terminar.");
+                    System.out.println("ERROR: Introduzca un número o FIN para terminar.");
                 }
             }
         }
+
+        horario.rellenarHoras(horas);
     }
 
     public static void archivo() {

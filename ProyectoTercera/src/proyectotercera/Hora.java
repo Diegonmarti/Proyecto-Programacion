@@ -2,7 +2,7 @@ package proyectotercera;
 
 import proyectotercera.utils.ISerializable;
 
-public class Hora implements ISerializable {
+public class Hora implements ISerializable, Comparable<Hora> {
 
     private byte horaInicio;
     private byte numAlumnos=0;
@@ -18,7 +18,7 @@ public class Hora implements ISerializable {
     public Hora() {}
 
     public byte realizarReserva(String nomAlumno, int telAlumno, String emailAlumno) {
-        if (horaInicio >= 8 && horaInicio <= 20) {//compruebo el rango de horaInicio (entre 8 y 20)
+        if (this.checkRango()) {//compruebo el rango de horaInicio (entre 8 y 20)
             //y modifico numAlumnos a 1 si está en el rango establecido. También guardamos los datos. 
             numAlumnos = 1;
             this.nomAlumno1 = nomAlumno;
@@ -30,13 +30,21 @@ public class Hora implements ISerializable {
     }
 
     public void borrarReserva() {
-        if (horaInicio >= 8 && horaInicio <= 20) {//compruebo si está en el rango, si lo está
+        if (this.checkRango()) {//compruebo si está en el rango, si lo está
             //numAlumnos lo pongo a 0
             numAlumnos = 0;
             this.nomAlumno1 = "";  
             this.telAlumno1 = 0;
             this.emailAlumno1 = "";
         }
+    }
+
+    public boolean checkRango() {
+        return Hora.checkRango(this.horaInicio);
+    }
+
+    public static boolean checkRango(byte horaInicio) {
+        return horaInicio >= 8 && horaInicio <= 20;
     }
 
     public String getHorario() {
@@ -98,5 +106,25 @@ public class Hora implements ISerializable {
         }
         
         return i;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+
+        if(!(obj instanceof Hora)) {
+            return false;
+        }
+
+        final Hora otro = (Hora)obj;
+
+        return this.horaInicio == otro.horaInicio;
+    }
+
+    @Override
+    public int compareTo(Hora otro) {
+        return Byte.compare(this.horaInicio, otro.horaInicio);
     }
 }
