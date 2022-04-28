@@ -1,6 +1,9 @@
 package proyectotercera;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import proyectotercera.utils.FileUtils;
 
 
 // Pendiende Ampliacion: Mas de un alumno/una reserva por hora
@@ -8,27 +11,28 @@ public class Reservar {
 
     //private static Reservar[] cita;
     private static Scanner entrada;
+    private static Reservas horario;
 
     public static void main(String[] args) {
         entrada = new Scanner(System.in);
-        /*cita = new Reservar[10];
-        for (int i = 0; i < cita.length; i++) {
-            cita[i] = new Reservar();
-        }*/
+        horario = new Reservas();
+        Reservar cita = new Reservar();
+           
         
         String palabra;
-        do {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            System.out.println(">Programa de reservas de Tutorías>");
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            System.out.println("Introduce el nombre del fichero de reservas a leer");
-            //Hacer el Scanner que llame al fichero
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("> Programa de reservas de Tutorías >");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println();
+        //Hacer el Scanner que llame al fichero
+        pedirArchivo();
 
+        do {
             System.out.println("1. RESERVAR");
             System.out.println("2. ANULAR");
             System.out.println("3. CONSULTAR");
             System.out.println("4. SALIR");
-            palabra = entrada.nextLine().toUpperCase();
+            palabra = entrada.nextLine().toUpperCase().trim();
          
             switch (palabra) {
 
@@ -49,9 +53,34 @@ public class Reservar {
                     System.out.println("Opción errónea...\n");
             }
         } while (!palabra.equals("SALIR"));
+
+
     }
 
-    private static void ReservarCita() {
+    private static void pedirArchivo() {
+        String input;
+        boolean fin = false;
+        while (!fin) {
+            System.out.println(">> Introduce el nombre del fichero de reservas a leer: ");
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {
+                if(!input.endsWith(".txt")) {
+                    input += ".txt";
+                }
+                if(FileUtils.existe(input)) {
+                    FileUtils.parsearArchivo(input, horario);
+                    fin = true;
+                }else {
+                    System.out.println("ERROR: El fichero " + input + " no existe.");
+                }
+            } else {
+                System.out.println("ERROR: Por favor, introduzca un nombre de archivo.");
+            }
+        }
+    }
+
+    private static void ReservarCita() { 
+       
         System.out.print("\nIndique Citas: ");
         int citas = Integer.parseInt(entrada.nextLine());
         System.out.print("Hora: ");
@@ -63,7 +92,7 @@ public class Reservar {
         String mail = entrada.nextLine();
         System.out.print("Teléfono: ");
         String telefono = entrada.nextLine();
-
+            
         // cita[citas].hacerReserva(new ReservarConst(nombre, hora, mail, telefono));
 
     }
@@ -80,20 +109,32 @@ public class Reservar {
     }
 
     private static void ConsultarCita() {
-        System.out.print("Hora a reservar: ");
-        String hora = entrada.nextLine();
-        boolean hayDisponibles = false;
+        boolean fin = false;
+        String input;
+        ArrayList<Cita> citas = new ArrayList<Cita>();
 
-        System.out.println("\nCitas disponibles: ");
-        /*for (int i = 0; i < cita.length; i++) {
-            if (cita[i].estaDisponible(hora)) {
-                System.out.println("- Citas #" + i);
-                hayDisponibles = true;
+        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+            System.out.print("¿Qué email o teléfono tienes?");
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {   //Si ha metido un valor
+                try {
+                    if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
+                        citas = horario.buscarCitas(input);
+                    }else { // es un telefono
+                        citas = horario.buscarCitas(Integer.parseInt(input));
+                    }
+                    fin = true;
+                }catch(NumberFormatException e) {
+                    System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                }
+            } else {
+                System.out.println("ERROR: Introduce un telefono o un email valido.");
             }
-        }*/
+        }
 
-        if (!hayDisponibles) {
-            System.out.println("\nNo hay citas disponibles para esa hora");
+        for(Cita c : citas) {
+            System.out.println(c.getDia() + " a la hora " + c.getHora());
         }
     }
+    
 }

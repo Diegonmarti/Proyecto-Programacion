@@ -9,7 +9,7 @@ import proyectotercera.utils.ISerializable;
 public class Reservas implements ISerializable {
     public String etiquetaLugar;
     public String nombreTutor;
-    public ArrayList <Dia> entradasDia = new ArrayList<Dia>();
+    public ArrayList<Dia> entradasDia = new ArrayList<Dia>();
 
     public Reservas(String nombreTutor) {
         this.nombreTutor = nombreTutor;
@@ -21,6 +21,31 @@ public class Reservas implements ISerializable {
         for (int i = 0; i < entradasDia.size(); i++) { //Es el length del arraylist
             entradasDia.get(i).leerDia();
         }
+    }
+
+    // Esto se puede mejorar rellenando el ArrayList<Cita> previamente y solo iterar sobre este
+    public ArrayList<Cita> buscarCitas(int telefono) {
+        ArrayList<Cita> out = new ArrayList<Cita>();
+        for(Dia dia : entradasDia) {
+            for(Hora hora : dia.entradasHora) {
+                if(hora.getTelefono() == telefono) {
+                    out.add(new Cita(dia.fecha, hora));
+                }
+            }
+        }
+        return out;
+    }
+
+    public ArrayList<Cita> buscarCitas(String email) {
+        ArrayList<Cita> out = new ArrayList<Cita>();
+        for(Dia dia : entradasDia) {
+            for(Hora hora : dia.entradasHora) {
+                if(hora.getEmail().equals(email)) {
+                    out.add(new Cita(dia.fecha, hora));
+                }
+            }
+        }
+        return out;
     }
     
     public void addContenido(Dia dia) {

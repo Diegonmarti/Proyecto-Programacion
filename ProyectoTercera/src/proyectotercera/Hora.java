@@ -54,6 +54,14 @@ public class Hora implements ISerializable, Comparable<Hora> {
     public byte getnumAlumnos() {
         return numAlumnos;
     }
+    
+    public int getTelefono() {
+        return telAlumno1;
+    }
+
+    public String getEmail() {
+        return emailAlumno1;
+    }
 
     @Override
     public String toString() {

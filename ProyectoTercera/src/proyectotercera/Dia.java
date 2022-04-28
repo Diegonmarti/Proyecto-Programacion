@@ -57,6 +57,10 @@ public class Dia implements ISerializable, Comparable<Dia> {
         entradasHora.addAll(horas);
     }
 
+    public String getStringFecha() {
+        return formatoFecha.format(this.fecha);
+    }
+
     @Override
     public String toSerializedData() {
         String out = "%D$" + formatoFecha.format(this.fecha) + "\n";
