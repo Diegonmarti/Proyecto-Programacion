@@ -1,5 +1,7 @@
 package proyectotercera;
 
+import java.util.ArrayList;
+
 import proyectotercera.utils.ISerializable;
 
 public class Hora implements ISerializable, Comparable<Hora> {
@@ -63,9 +65,18 @@ public class Hora implements ISerializable, Comparable<Hora> {
         return emailAlumno1;
     }
 
+    public static int indice(ArrayList<Hora> lista, byte hora) {
+        for(int i=0;i<lista.size();i++) {
+            if(lista.get(i).horaInicio == hora) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public String toString() {
-        return nomAlumno1 + ", " + telAlumno1 + ", " + emailAlumno1 + " // " + getHorario();
+        return getHorario();
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Dia implements ISerializable, Comparable<Dia> {
     public Date fecha;
     public ArrayList<Hora> entradasHora = new ArrayList<Hora>();
     public static DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yy");
+    public static DateFormat formatoFechaSinAnio = new SimpleDateFormat("dd/MM");
 
     public Dia(String entradaDia) {
         this.setFecha(entradaDia);
@@ -59,6 +60,30 @@ public class Dia implements ISerializable, Comparable<Dia> {
 
     public String getStringFecha() {
         return formatoFecha.format(this.fecha);
+    }
+
+    public String getStringFechaSinAnio() {
+        return formatoFechaSinAnio.format(this.fecha);
+    }
+
+    public static int indice(ArrayList<Dia> lista, String fecha) {
+        for(int i=0;i<lista.size();i++) {
+            if(lista.get(i).getStringFecha().equals(fecha) || lista.get(i).getStringFechaSinAnio().equals(fecha)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public ArrayList<Hora> getHorasLibres() {
+        ArrayList<Hora> out = new ArrayList<Hora>();
+        for(Hora hora : entradasHora) {
+            if(hora.getnumAlumnos() == 0) {
+                out.add(hora);
+            }
+        }
+        
+        return out;
     }
 
     @Override

@@ -47,6 +47,19 @@ public class Reservas implements ISerializable {
         }
         return out;
     }
+
+    public ArrayList<Dia> getDiasLibres() {
+        ArrayList<Dia> out = new ArrayList<Dia>();
+        for(Dia dia : entradasDia) {
+            for(Hora hora : dia.entradasHora) {
+                if(hora.getnumAlumnos() == 0) {
+                    out.add(dia);
+                }
+            }
+        }
+        
+        return out;
+    }
     
     public void addContenido(Dia dia) {
         entradasDia.add(dia);
