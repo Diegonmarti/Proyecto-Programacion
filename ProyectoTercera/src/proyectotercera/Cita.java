@@ -19,6 +19,11 @@ public class Cita {
         return hora;
     }
 
+    @Override
+    public String toString() {
+        return Dia.formateaFechaSinAnio(dia) + " a las " + hora.toString();
+    }
+
     // @Override
     // public boolean equals(Object obj) {
     //     if(obj == null) {

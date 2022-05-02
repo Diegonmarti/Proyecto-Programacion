@@ -1,5 +1,6 @@
 package proyectotercera;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class Reservar {
 
     //private static Reservar[] cita;
     private static Scanner entrada;
+
     private static Reservas horario;
 
     public static void main(String[] args) {
@@ -68,7 +70,7 @@ public class Reservar {
                     input += ".txt";
                 }
                 if(FileUtils.existe(input)) {
-                    FileUtils.parsearArchivo(input, horario);
+                    FileUtils.parsearArchivo(input, horario);  //Preguntar a victor como se llaman a constructores y esas vainas
                     fin = true;
                 }else {
                     System.out.println("ERROR: El fichero " + input + " no existe.");
@@ -92,7 +94,7 @@ public class Reservar {
             diasLibres += dias.get(i).getStringFechaSinAnio();
             if(i == dias.size() - 2) {
                 diasLibres += " y ";
-            }else if(i == dias.size() - 1){
+            }else if(i <= dias.size() - 1) {
                 diasLibres += ", ";
             }
         }
@@ -188,16 +190,49 @@ public class Reservar {
     }
 
     private static void AnularCita() {
-        System.out.print("\nIndique cita para anular: ");
-        int citas = Integer.parseInt(entrada.nextLine());
-        System.out.print("Hora que quiera anular: ");
-        String hora = entrada.nextLine();
-        System.out.print("Nombre del archivo para anular: ");
-        String nombre = entrada.nextLine();
+        boolean fin = false;
+        String input;
+        ArrayList<Cita> citas = new ArrayList<Cita>();
 
+        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+            System.out.print("¿Qué email o teléfono tienes?");
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {   //Si ha metido un valor
+                try {
+                    if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
+                        citas = horario.buscarCitas(input);
+                    }else { // es un telefono
+                        citas = horario.buscarCitas(Integer.parseInt(input));
+                    }
+                    fin = true;
+                }catch(NumberFormatException e) {
+                    System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                }
+            } else {
+                System.out.println("ERROR: Introduce un telefono o un email valido.");
+            }
+        }
 
-        // cita[citas].anularReserva(nombre, hora);
+        if(citas.size() == 0) {
+            System.out.println("No tienes reservas.");
+        }else if(citas.size() == 1) {
+            //-------
+        }else {
+            System.out.println("Se han encontrado varias reservas. Seleccione una.");
+            ArrayList<Date> dt = new ArrayList<Date>();
+            
+            for(int i=0;i<citas.size();i++){
+                if(!dt.contains(citas.get(i).getDia())){  //si no contiene el día
+                    dt.add(citas.get(i).getDia());  //Se lo añades
+                    System.out.println(Dia.formateaFechaSinAnio(citas.get(i).getDia())); // imprime
+                }
+            }
+            
+            System.out.println("Introduzca el dia deseado:");
+            
+        }
     }
+    
 
     private static void ConsultarCita() {
         boolean fin = false;
@@ -223,8 +258,12 @@ public class Reservar {
             }
         }
 
-        for(Cita c : citas) {
-            System.out.println(c.getDia() + " a la hora " + c.getHora());
+        if (citas.size() == 0) {
+            System.out.println("No tienes ninguna reserva.");
+        }else {
+            for(Cita cita : citas) {
+                System.out.println(cita.toString());
+            }
         }
     }
     

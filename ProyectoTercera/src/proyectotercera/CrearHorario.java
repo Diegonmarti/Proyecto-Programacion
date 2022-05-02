@@ -3,7 +3,6 @@ package proyectotercera;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import proyectotercera.utils.FileUtils;
 import proyectotercera.utils.MetodosComunes;
 
 public class CrearHorario {
@@ -37,7 +36,7 @@ public class CrearHorario {
             System.out.print("Nombre del profesor: ");
             input = entrada.nextLine().trim();  //metes el nombre que quieras
             if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
-                horario = new Reservas(input); //si la entrada es correcta te lo mete en Reservas
+                horario = new Reservas(input); //si la entrada es correcta te lo mete en horario
                 fin = true;  //sale
             } else {
                 System.out.println("ERROR: No puede dejar el nombre en blanco.");
@@ -118,42 +117,5 @@ public class CrearHorario {
         }
 
         horario.rellenarHoras(horas);
-    }
-
-    public static void archivo() {
-        String nombre = "";
-        boolean fin = false;
-        boolean primeraIteracion = true;
-        while (!fin) {
-            if(!primeraIteracion) {
-                System.out.println("Introduce el nombre de fichero de texto en el que quieres guardar tu horario: ");
-            }
-            primeraIteracion = false;
-            nombre = entrada.nextLine().trim(); //meter el nombre del fichero
-            if(nombre.length() > 0) {  //Al menos meter un carácter
-                if(nombre.matches(".*[\\\\/:\\*\\?\"<>\\|].*")){ //que no meta ninguno de estos símbolos
-                    System.out.println("ERROR: Nombre de archivo no válido.");
-                }else {  //si lo mete todo bien, puede salir
-                    if(!nombre.endsWith(".txt")) {
-                        nombre += ".txt";
-                    }
-
-                    if(FileUtils.existe(nombre)) {
-                        System.out.println("El fichero " + nombre + " ya existe, si desea sobreescribirlo, introduzca SI.");
-                        String opcion = entrada.nextLine();
-
-                        if(opcion.equalsIgnoreCase("SI")) {
-                            System.out.println("Sobrescribiendo...");  
-                        }else {
-                            continue;
-                        }
-                    }
-                    fin = true;
-                }
-            } else {
-                System.out.println("ERROR: Introduce un nombre de archivo.");
-            }
-        }
-        FileUtils.escribirArchivo(nombre, horario); // llamamos a la funcion escribir archivo para escribir en un fichero
     }
 }

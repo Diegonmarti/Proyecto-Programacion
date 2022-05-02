@@ -66,6 +66,14 @@ public class Dia implements ISerializable, Comparable<Dia> {
         return formatoFechaSinAnio.format(this.fecha);
     }
 
+    public static String formateaFechaSinAnio(Date fecha) {
+        return formatoFechaSinAnio.format(fecha);
+    }
+
+    public static int indice(ArrayList<Dia> lista, Date fecha) {
+        return Dia.indice(lista, formatoFecha.format(fecha));
+    }
+
     public static int indice(ArrayList<Dia> lista, String fecha) {
         for(int i=0;i<lista.size();i++) {
             if(lista.get(i).getStringFecha().equals(fecha) || lista.get(i).getStringFechaSinAnio().equals(fecha)) {
