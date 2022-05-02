@@ -70,6 +70,14 @@ public class Dia implements ISerializable, Comparable<Dia> {
         return formatoFechaSinAnio.format(fecha);
     }
 
+    public static Date parseaFechaSinAnio(String fecha) {
+        try {
+            return formatoFechaSinAnio.parse(fecha);
+        }catch(ParseException e) {
+            return Date.from(Instant.ofEpochMilli(0));
+        }
+    }
+
     public static int indice(ArrayList<Dia> lista, Date fecha) {
         return Dia.indice(lista, formatoFecha.format(fecha));
     }

@@ -48,6 +48,10 @@ public class Hora implements ISerializable, Comparable<Hora> {
     public static boolean checkRango(byte horaInicio) {
         return horaInicio >= 8 && horaInicio <= 20;
     }
+    
+    public byte getHoraInicio() {
+        return horaInicio;
+    }
 
     public String getHorario() {
         return horaInicio + ":00h - " + (horaInicio + 1) + ":00h";

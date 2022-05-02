@@ -54,6 +54,7 @@ public class Reservas implements ISerializable {
             for(Hora hora : dia.entradasHora) {
                 if(hora.getnumAlumnos() == 0) {
                     out.add(dia);
+                    break;
                 }
             }
         }

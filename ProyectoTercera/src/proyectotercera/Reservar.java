@@ -94,7 +94,7 @@ public class Reservar {
             diasLibres += dias.get(i).getStringFechaSinAnio();
             if(i == dias.size() - 2) {
                 diasLibres += " y ";
-            }else if(i <= dias.size() - 1) {
+            }else if(i < dias.size() - 2) {
                 diasLibres += ", ";
             }
         }
@@ -213,23 +213,129 @@ public class Reservar {
             }
         }
 
+        fin = false;
+
         if(citas.size() == 0) {
             System.out.println("No tienes reservas.");
-        }else if(citas.size() == 1) {
-            //-------
         }else {
-            System.out.println("Se han encontrado varias reservas. Seleccione una.");
-            ArrayList<Date> dt = new ArrayList<Date>();
-            
-            for(int i=0;i<citas.size();i++){
-                if(!dt.contains(citas.get(i).getDia())){  //si no contiene el día
-                    dt.add(citas.get(i).getDia());  //Se lo añades
-                    System.out.println(Dia.formateaFechaSinAnio(citas.get(i).getDia())); // imprime
+            int indiceHora = -1;
+            Date fechaReserva = null;
+
+            if(citas.size() > 1) { // si hay 2+ citas
+                System.out.println("Se han encontrado varias reservas. Seleccione una.");
+                ArrayList<Date> dates = new ArrayList<Date>();
+                
+                for(int i=0;i<citas.size();i++){
+                    if(!dates.contains(citas.get(i).getDia())){  //si no contiene el día
+                        dates.add(citas.get(i).getDia());  //Se lo añades
+                    }
+                }
+                
+                String diasReservados = "";
+                for(int i=0;i<dates.size();i++) {
+                    diasReservados += Dia.formateaFechaSinAnio(dates.get(i));
+                    if(i == dates.size() - 2) {
+                        diasReservados += " y ";
+                    }else if(i < dates.size() - 2) {
+                        diasReservados += ", ";
+                    }
+                }
+                
+                int indiceDate = -1;
+
+                while (indiceDate == -1) {
+                    System.out.println("Estos son los dias en los que has reservado:");
+                    System.out.println(diasReservados);
+                    System.out.println("Indica el dia deseado:");
+                    input = entrada.nextLine().trim();
+                    if(input.length() > 0) {   //Si ha metido un valor
+                        for(int i=0;i<dates.size();i++) {
+                            if(Dia.formateaFechaSinAnio(dates.get(i)).equals(input)) {
+                                indiceDate = i;
+                                break;
+                            }
+                        }
+                        if(indiceDate == -1) {
+                            System.out.println("ERROR: Introduce un dia que aparezca en la lista.");
+                        }
+                    } else {
+                        System.out.println("ERROR: Introduce un dia.");
+                    }
+                }
+                fechaReserva = dates.get(indiceDate);
+
+                ArrayList<Hora> horas = new ArrayList<Hora>();
+                for(int i=0;i<citas.size();i++){
+                    if(citas.get(i).getDia().equals(fechaReserva)){
+                        horas.add(citas.get(i).getHora());
+                    }
+                }
+
+                String horasReservadas = "";
+                for(int i=0;i<horas.size();i++) {
+                    horasReservadas += horas.get(i);
+                    if(i != dates.size() - 1) {
+                        horasReservadas += ", ";
+                    }
+                }
+
+                while (indiceHora == -1) {
+                    System.out.println("Estos son los horarios que reservaste para ese dia:");
+                    System.out.println(horasReservadas);
+                    System.out.println("Indica el horario deseado:");
+                    input = entrada.nextLine().trim();
+                    if(input.length() > 0) {   //Si ha metido un valor
+                        indiceHora = Hora.indice(horas, Byte.parseByte(input));
+                        if(indiceHora == -1) {
+                            System.out.println("ERROR: Introduce un horario que aparezca en la lista.");
+                        }
+                    } else {
+                        System.out.println("ERROR: Introduce una hora.");
+                    }
                 }
             }
+
+            fin = false;
+
+            if(citas.size() == 1) {
+                fechaReserva = citas.get(0).getDia();
+            }
+
+            int indiceDia = Dia.indice(horario.entradasDia, fechaReserva);
             
-            System.out.println("Introduzca el dia deseado:");
-            
+            if(citas.size() == 1) {
+                indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, citas.get(0).getHora().getHoraInicio());
+            }
+
+            Hora horaAnular = horario.entradasDia.get(indiceDia).entradasHora.get(indiceHora);
+            String reservaAnular = Dia.formateaFechaSinAnio(fechaReserva) + " a las " + horaAnular;
+
+            boolean anular = false;
+            while(!fin) {
+                System.out.println("Vas a anular la reserva:");
+                System.out.println(reservaAnular);
+                System.out.println("¿Quieres anularla? (SI/NO)");
+                input = entrada.nextLine().trim();
+                if(input.length() > 0) {   //Si ha metido un valor
+                    if(input.equalsIgnoreCase("SI")) {
+                        anular = true;
+                        fin = true;
+                    }else if(input.equalsIgnoreCase("NO")) {
+                        anular = false;
+                        fin = true;
+                    }else {
+                        System.out.println("ERROR: Introduce SI o NO.");
+                    }
+                } else {
+                    System.out.println("ERROR: Entrada vacia. Introduce SI o NO.");
+                }
+            }
+            if(anular) {
+                horaAnular.borrarReserva();
+                System.out.println("Perfecto. Reserva anulada.");
+            }else {
+                System.out.println("Perfecto. Operación ANULAR cancelada.");
+            }
         }
     }
     
