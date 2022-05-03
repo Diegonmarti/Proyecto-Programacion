@@ -20,6 +20,7 @@ public abstract class FileUtils {
             f.getParentFile().mkdirs();
         }
         
+        // Si el archivo no existe, PrintWriter se lo crea
         try {
             pw = new PrintWriter(f.getPath());
         } catch(FileNotFoundException e) {}
@@ -37,7 +38,7 @@ public abstract class FileUtils {
         String datos = "";
         try {
             sc = new Scanner(new File(RUTA_BASE + nombre));
-            while(sc.hasNextLine()) {
+            while(sc.hasNextLine()) { // Mientras que al Scanner le queden lineas por leer, las guardamos en datos
                 datos += sc.nextLine()+"\n";
             }
             return datos;
