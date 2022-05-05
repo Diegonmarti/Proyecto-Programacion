@@ -34,6 +34,11 @@ public abstract class MetodosComunes {
                 if(nombre.matches(".*[\\\\/:\\*\\?\"<>\\|].*")){ //que no meta ninguno de estos símbolos
                     System.out.println("ERROR: Nombre de archivo no válido.");
                 }else {  //si lo mete todo bien, puede salir
+                    // si el nombre contiene puntos, cambiarlos por "-"
+                    if(nombre.contains(".")) {
+                        System.out.println("Aviso, tu fichero contiene puntos (\".\") en el nombre, se van a reemplazar por guiones (\"-\").");
+                        nombre = nombre.substring(0, nombre.length() - 4).replaceAll("\\.", "-") + nombre.substring(nombre.length() - 4);
+                    }
                     if(!nombre.endsWith(".txt")) {
                         nombre += ".txt";
                     }
