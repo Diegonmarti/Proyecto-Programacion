@@ -109,12 +109,12 @@ public class Hora implements ISerializable, Comparable<Hora> {
         // Este bucle está por si hay datos que no coincidan antes de leer
         // la hora. Asi se pueden ignorar fácilmente.
         // Ejemplo:
-        // %C$nom|000111222|email
+        // %C$nom$000111222$email
         // %H$09
-        // %C$nom2|999888777|email2
+        // %C$nom2$999888777$email2
         int i;
         for(i=0;i<data.length;i++) {
-            if(data[i].startsWith("%H$") && !rellenaHora)  {
+            if(data[i].startsWith("%H$") && !rellenaHora) {
                 this.horaInicio = Byte.parseByte(data[i].substring(3));
                 rellenaHora = true;
             }else if(data[i].startsWith("%C$") && rellenaHora && this.numAlumnos == 0) {
