@@ -115,7 +115,7 @@ public class Dia implements ISerializable, Comparable<Dia> {
     }
     
     @Override
-    public int fromSerializedData(String[] data) {        
+    public int fromSerializedData(String[] data) {
         Hora hora;
         this.setFecha(data[0].substring(3));
         

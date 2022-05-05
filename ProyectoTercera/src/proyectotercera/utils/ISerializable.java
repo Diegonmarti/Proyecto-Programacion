@@ -26,6 +26,6 @@ public interface ISerializable {
      * @return La cantidad de lineas que se han utilizado.
      */
     public default int fromSerializedData(String data) {
-        return this.fromSerializedData(data.split("\n"));
+        return this.fromSerializedData(data.split("\n")); //separa en saltos de lineas
     }
 }

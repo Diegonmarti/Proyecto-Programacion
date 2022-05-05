@@ -19,7 +19,6 @@ public class Reservar {
     public static void main(String[] args) {
         entrada = new Scanner(System.in);
         horario = new Reservas();
-        Reservar cita = new Reservar();
            
         
         String palabra;
@@ -86,56 +85,79 @@ public class Reservar {
         boolean fin = false;
         String input;
         ArrayList<Dia> dias = horario.getDiasLibres();
-        int indiceDia = -1;
-        int indiceHora = -1;
 
-        String diasLibres = "";
-        for(int i=0;i<dias.size();i++) {
-            diasLibres += dias.get(i).getStringFechaSinAnio();
-            if(i == dias.size() - 2) {
-                diasLibres += " y ";
-            }else if(i < dias.size() - 2) {
-                diasLibres += ", ";
-            }
+        if(dias.size() == 0) {
+            System.out.println("Lo sentimos, no quedan huecos libres para reservar.");
+            return; // es return a secas, porque la función no devuelve nada (es void), si se ejecuta
+            // esta línea, se sale de la función.
         }
-        
-        while (indiceDia == -1) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.println("Estos son los dias con huecos:");
-            System.out.println(diasLibres);
-            System.out.println("Indica el dia deseado:");
-            input = entrada.nextLine().trim();
-            if(input.length() > 0) {   //Si ha metido un valor
-                indiceDia = Dia.indice(dias, input);
-                if(indiceDia == -1) {
-                    System.out.println("ERROR: Introduce un dia que aparezca en la lista.");
+
+        Date fechaReserva = null;
+        byte horaInicial = 0;
+
+        int indiceDate = -1;
+        if(dias.size() == 1) {
+            System.out.println("Solo nos queda un dia libre. Se ha seleccionado automaticamente.");
+            indiceDate = 0;
+        }else {
+            String diasLibres = "";
+            for(int i=0;i<dias.size();i++) {
+                diasLibres += dias.get(i).getStringFechaSinAnio();
+                if(i == dias.size() - 2) {
+                    diasLibres += " y ";
+                }else if(i < dias.size() - 2) {
+                    diasLibres += ", ";
                 }
-            } else {
-                System.out.println("ERROR: Introduce un dia.");
+            }
+            
+            while (indiceDate == -1) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+                System.out.println("Estos son los dias con huecos:");
+                System.out.println(diasLibres);
+                System.out.println("Indica el dia deseado:");
+                input = entrada.nextLine().trim();
+                if(input.length() > 0) {   //Si ha metido un valor
+                    indiceDate = Dia.indice(dias, input);
+                    if(indiceDate == -1) {
+                        System.out.println("ERROR: Introduce un dia que aparezca en la lista.");
+                    }
+                } else {
+                    System.out.println("ERROR: Introduce un dia.");
+                }
             }
         }
+        fechaReserva = dias.get(indiceDate).fecha;
 
-        ArrayList<Hora> horas = dias.get(indiceDia).getHorasLibres();
+        ArrayList<Hora> horas = dias.get(indiceDate).getHorasLibres();
 
-        while (indiceHora == -1) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.println("Para dicho dia tenemos huecos en los siguientes horarios:");
+        int indiceAux = -1;
+        if(horas.size() == 1) {
+            System.out.println("Solo nos queda una hora libre para ese dia. Se ha seleccionado automaticamente.");
+            indiceAux = 0;
+        }else {
+            String horasLibres = "";
             for(int i=0;i<horas.size();i++) {
-                System.out.print(horas.get(i));
-                if(i < horas.size()-1) {
-                    System.out.print(",");
+                horasLibres += horas.get(i);
+                if(i != horas.size() - 1) {
+                    horasLibres += ", ";
                 }
             }
-            System.out.println();
-            System.out.println("Indica el horario deseado:");
-            input = entrada.nextLine().trim();
-            if(input.length() > 0) {   //Si ha metido un valor
-                indiceHora = Hora.indice(horas, Byte.parseByte(input));
-                if(indiceHora == -1) {
-                    System.out.println("ERROR: Introduce un horario que aparezca en la lista.");
+
+            while (indiceAux == -1) {
+                System.out.println("Para dicho dia tenemos huecos en los siguientes horarios:");
+                System.out.println(horasLibres);
+                System.out.println("Indica el horario deseado:");
+                input = entrada.nextLine().trim();
+                if(input.length() > 0) {   //Si ha metido un valor
+                    indiceAux = Hora.indice(horas, Byte.parseByte(input));
+                    if(indiceAux == -1) {
+                        System.out.println("ERROR: Introduce un horario que aparezca en la lista.");
+                    }
+                } else {
+                    System.out.println("ERROR: Introduce una hora.");
                 }
-            } else {
-                System.out.println("ERROR: Introduce una hora.");
             }
         }
+        horaInicial = horas.get(indiceAux).getHoraInicio();
 
         String nombre = "";
         int telefono = 0;
@@ -180,10 +202,13 @@ public class Reservar {
                     System.out.println("ERROR: Introduzca una dirección de e-mail válida.");
                 }
             } else {
-                System.out.println("ERROR: No puede dejar el nombre en blanco.");
+                System.out.println("ERROR: No puede dejar el campo en blanco.");
             }
         }
         
+        int indiceDia = Dia.indice(horario.entradasDia, fechaReserva);
+        int indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, horaInicial);
+
         horario.entradasDia.get(indiceDia).entradasHora.get(indiceHora).realizarReserva(nombre, telefono, email);
         //System.out.println("Perfecto, has reservado para");
         System.out.println("Reserva realizada con exito.");
@@ -214,7 +239,7 @@ public class Reservar {
         }
 
         fin = false;
-        //CONTROLAR QUE 
+        
         if(citas.size() == 0) {
             System.out.println("No tienes reservas.");
         }else {
@@ -231,37 +256,42 @@ public class Reservar {
                         dates.add(citas.get(i).getDia());  //Se lo añades
                     }
                 }
-                
-                // CONSTRUIR LA SALIDA MEDIANTE COMAS Y LA PENULTIMA POS UN Y
-                String diasReservados = "";
-                for(int i=0;i<dates.size();i++) {
-                    diasReservados += Dia.formateaFechaSinAnio(dates.get(i));
-                    if(i == dates.size() - 2) { //SI ES LA PENULTIMA POS LE AÑADIMOS "Y"
-                        diasReservados += " y ";
-                    }else if(i < dates.size() - 2) { //SI NO ","
-                        diasReservados += ", ";
-                    }
-                }
-                
-                int indiceDate = -1;
 
-                while (indiceDate == -1) {
-                    System.out.println("Estos son los dias en los que has reservado:");
-                    System.out.println(diasReservados);
-                    System.out.println("Indica el dia deseado:");
-                    input = entrada.nextLine().trim();
-                    if(input.length() > 0) {   //Si ha metido un valor
-                        for(int i=0;i<dates.size();i++) {
-                            if(Dia.formateaFechaSinAnio(dates.get(i)).equals(input)) { //BUSCAMOS EN EL ARRAYLIST EL CONTENIDO
-                                indiceDate = i;
-                                break;
+                int indiceDate = -1;
+                if(dates.size() == 1) {
+                    System.out.println("Solo has reservado en un dia. Se ha seleccionado automaticamente.");
+                    indiceDate = 0;
+                }else {
+                    // CONSTRUIR LA SALIDA MEDIANTE COMAS Y LA PENULTIMA POS UN Y
+                    String diasReservados = "";
+                    for(int i=0;i<dates.size();i++) {
+                        diasReservados += Dia.formateaFechaSinAnio(dates.get(i));
+                        if(i == dates.size() - 2) { //SI ES LA PENULTIMA POS LE AÑADIMOS "Y"
+                            diasReservados += " y ";
+                        }else if(i < dates.size() - 2) { //SI NO ","
+                            diasReservados += ", ";
+                        }
+                    }
+                    
+
+                    while (indiceDate == -1) {
+                        System.out.println("Estos son los dias en los que has reservado:");
+                        System.out.println(diasReservados);
+                        System.out.println("Indica el dia deseado:");
+                        input = entrada.nextLine().trim();
+                        if(input.length() > 0) {   //Si ha metido un valor
+                            for(int i=0;i<dates.size();i++) {
+                                if(Dia.formateaFechaSinAnio(dates.get(i)).equals(input)) { //BUSCAMOS EN EL ARRAYLIST EL CONTENIDO
+                                    indiceDate = i;
+                                    break;
+                                }
                             }
+                            if(indiceDate == -1) {
+                                System.out.println("ERROR: Introduce un dia que aparezca en la lista.");
+                            }
+                        } else {
+                            System.out.println("ERROR: Introduce un dia.");
                         }
-                        if(indiceDate == -1) {
-                            System.out.println("ERROR: Introduce un dia que aparezca en la lista.");
-                        }
-                    } else {
-                        System.out.println("ERROR: Introduce un dia.");
                     }
                 }
                 fechaReserva = dates.get(indiceDate);
@@ -275,32 +305,38 @@ public class Reservar {
                     }
                 }
 
-                String horasReservadas = "";
-                for(int i=0;i<horas.size();i++) {
-                    horasReservadas += horas.get(i);
-                    if(i != horas.size() - 1) {
-                        horasReservadas += ", ";
-                    }
-                }
                 
                 int indiceAux = -1;
-                while (indiceAux == -1) {
-                    System.out.println("Estos son los horarios que reservaste para ese dia:");
-                    System.out.println(horasReservadas);
-                    System.out.println("Indica el horario deseado:");
-                    input = entrada.nextLine().trim();
-                    if(input.length() > 0) {   //Si ha metido un valor
-                        try {
-                            indiceAux = Hora.indice(horas, Byte.parseByte(input)); // IMPORTANTE CONTROLAR
-                            if(indiceAux == -1) {
-                                System.out.println("ERROR: Introduce un horario que aparezca en la lista.");
-                            }
-                        }catch(NumberFormatException e) {
-                            indiceAux = -1; // Devolvemos a -1 por si acaso
-                            System.out.println("ERROR: Introduce un numero.");
+                if(horas.size() == 1) {
+                    System.out.println("Solo has reservado en un hora. Se ha seleccionado automaticamente.");
+                    indiceAux = 0;
+                }else {
+                    String horasReservadas = "";
+                    for(int i=0;i<horas.size();i++) {
+                        horasReservadas += horas.get(i);
+                        if(i != horas.size() - 1) {
+                            horasReservadas += ", ";
                         }
-                    } else {
-                        System.out.println("ERROR: Introduce una hora.");
+                    }
+                    
+                    while (indiceAux == -1) {
+                        System.out.println("Estos son los horarios que reservaste para ese dia:");
+                        System.out.println(horasReservadas);
+                        System.out.println("Indica el horario deseado:");
+                        input = entrada.nextLine().trim();
+                        if(input.length() > 0) {   //Si ha metido un valor
+                            try {
+                                indiceAux = Hora.indice(horas, Byte.parseByte(input)); // IMPORTANTE CONTROLAR
+                                if(indiceAux == -1) {
+                                    System.out.println("ERROR: Introduce un horario que aparezca en la lista.");
+                                }
+                            }catch(NumberFormatException e) {
+                                indiceAux = -1; // Devolvemos a -1 por si acaso
+                                System.out.println("ERROR: Introduce un numero.");
+                            }
+                        } else {
+                            System.out.println("ERROR: Introduce una hora.");
+                        }
                     }
                 }
                 horaInicial = horas.get(indiceAux).getHoraInicio();
