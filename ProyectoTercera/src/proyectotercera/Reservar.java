@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import proyectotercera.utils.DBUtils;
 import proyectotercera.utils.FileUtils;
 import proyectotercera.utils.MetodosComunes;
 
@@ -19,7 +20,9 @@ public class Reservar {
     public static void main(String[] args) {
         entrada = new Scanner(System.in);
         horario = new Reservas();
-           
+
+        MetodosComunes.cargarConfiguracion();
+        DBUtils.initParams(Config.getAddress(), Config.getDBName(), Config.getUsername(), Config.getPassword());
         
         String palabra;
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -69,7 +72,7 @@ public class Reservar {
                     input += ".txt";
                 }
                 if(FileUtils.existe(input)) {
-                    FileUtils.parsearArchivo(input, horario);  //Preguntar a victor como se llaman a constructores y esas vainas
+                    FileUtils.parsearArchivo(input, horario);
                     fin = true;
                 }else {
                     System.out.println("ERROR: El fichero " + input + " no existe.");
@@ -159,52 +162,9 @@ public class Reservar {
         }
         horaInicial = horas.get(indiceAux).getHoraInicio();
 
-        String nombre = "";
-        int telefono = 0;
-        String email = "";
-        
-        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.print("Indica tu nombre: ");
-            input = entrada.nextLine().trim();  //metes el nombre que quieras
-            if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
-                nombre = input;
-                fin = true;  //sale
-            } else {
-                System.out.println("ERROR: No puede dejar el nombre en blanco.");
-            }
-        }
-        fin = false;
-        
-        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.print("Indica tu telefono: ");
-            input = entrada.nextLine().trim();  //metes el nombre que quieras
-            if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
-                try {
-                    telefono = Integer.parseInt(input);
-                    fin = true;  //sale
-                }catch(NumberFormatException e) {
-                    System.out.println("ERROR: Introduzca un telefono valido.");
-                }
-            } else {
-                System.out.println("ERROR: No puede dejar el nombre en blanco.");
-            }
-        }
-        fin = false;
-
-        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.print("Indica tu e-mail: ");
-            input = entrada.nextLine().trim();  //metes el nombre que quieras
-            if(input.length() > 0) {    //esto es para que no meta un nombre en blanco
-                if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-                    email = input;
-                    fin = true;
-                }else {
-                    System.out.println("ERROR: Introduzca una dirección de e-mail válida.");
-                }
-            } else {
-                System.out.println("ERROR: No puede dejar el campo en blanco.");
-            }
-        }
+        String nombre = MetodosComunes.pedirNombre("Indica tu nombre: ");
+        int telefono = MetodosComunes.pedirTelefono("Indica tu telefono: ");
+        String email = MetodosComunes.pedirEmail("Indica tu e-mail: ");
         
         int indiceDia = Dia.indice(horario.entradasDia, fechaReserva);
         int indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, horaInicial);
@@ -356,26 +316,8 @@ public class Reservar {
             Hora horaAnular = horario.entradasDia.get(indiceDia).entradasHora.get(indiceHora);
             String reservaAnular = Dia.formateaFechaSinAnio(fechaReserva) + " a las " + horaAnular;
 
-            boolean anular = false;
-            while(!fin) {
-                System.out.println("Vas a anular la reserva:");
-                System.out.println(reservaAnular);
-                System.out.println("¿Quieres anularla? (SI/NO)");
-                input = entrada.nextLine().trim();
-                if(input.length() > 0) {   //Si ha metido un valor
-                    if(input.equalsIgnoreCase("SI")) {
-                        anular = true;
-                        fin = true;
-                    }else if(input.equalsIgnoreCase("NO")) {
-                        anular = false;
-                        fin = true;
-                    }else {
-                        System.out.println("ERROR: Introduce SI o NO.");
-                    }
-                } else {
-                    System.out.println("ERROR: Entrada vacia. Introduce SI o NO.");
-                }
-            }
+            boolean anular = MetodosComunes.pedirConfirmacion("Vas a anular la reserva:\n" + reservaAnular + "\n¿Quieres anularla? (SI/NO)");
+            
             if(anular) {
                 horaAnular.borrarReserva();
                 System.out.println("Perfecto. Reserva anulada.");

@@ -2,6 +2,8 @@ package proyectotercera.utils;
 
 import java.util.Scanner;
 
+import proyectotercera.Config;
+
 public abstract class MetodosComunes {
     private static Scanner entrada = new Scanner(System.in);
     public static void guardarArchivo(ISerializable obj, String mensaje) {
@@ -60,5 +62,115 @@ public abstract class MetodosComunes {
             }
         }
         FileUtils.escribirArchivo(nombre, obj); // llamamos a la funcion escribir archivo para escribir en un fichero
+    }
+
+    // Llamar siempre al principio de los mains. Se encarga de cargar el archivo de configuración y crearlo si no existe
+    public static void cargarConfiguracion() {
+        String configPath = Config.getConfigFilePath();
+        if(FileUtils.existe(configPath)) {
+            FileUtils.parsearArchivo(configPath, Config.INSTANCIA);
+        }else{
+            FileUtils.escribirArchivo(configPath, Config.INSTANCIA);
+        }
+    }
+
+    public static String pedirNombre(String mensaje) {
+        String input;
+        while (true) {
+            System.out.print(mensaje);
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {
+                return input;
+            } else {
+                System.out.println("ERROR: No puede dejar el nombre en blanco.");
+            }
+        }
+    }
+
+    public static int pedirTelefono(String mensaje) {
+        String input;
+        while (true) {
+            System.out.print(mensaje);
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {
+                try {
+                    return Integer.parseInt(input);
+                }catch(NumberFormatException e) {
+                    System.out.println("ERROR: Introduzca un telefono valido.");
+                }
+            } else {
+                System.out.println("ERROR: No puede dejar el telefono en blanco.");
+            }
+        }
+    }
+
+    public static String pedirEmail(String mensaje) {
+        String input;
+        while (true) {
+            System.out.print(mensaje);
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {
+                if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                    return input;
+                }else {
+                    System.out.println("ERROR: Introduzca una dirección de e-mail valida.");
+                }
+            } else {
+                System.out.println("ERROR: No puede dejar el e-mail en blanco.");
+            }
+        }
+    }
+
+    public static String pedirPassword(String mensaje, String mensajeRepetir, boolean repetir) {
+        String input = "";
+        String confirmacion = "";
+        boolean fin = false;
+
+        while (!fin) {
+            System.out.print(mensaje);
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {
+                if(input.length() > 8) {
+                    if(repetir) {
+                        // Pedir otra vez la contraseña para confirmar. Si coinciden, se termina, y si no, se vuelve a empezar
+                        confirmacion = pedirPassword(mensajeRepetir, "", false);
+                        if(input.equals(confirmacion)) {
+                            fin = true;
+                        }else {
+                            System.out.println("ERROR: Las contraseñas no coinciden. Por favor vuelva a introducir una contraseña.");
+                        }
+                    }else {
+                        fin = true;
+                    }
+                }else {
+                    System.out.println("ERROR: Introduzca una contraseña válida.");
+                    System.out.println("Requisitos: Mínimo 8 caractéres."); 
+                }
+            } else {
+                System.out.println("ERROR: No puede dejar la contraseña en blanco.");
+            }
+        }
+
+        return input;
+    }
+
+    public static boolean pedirConfirmacion(String mensaje) {
+        String input;
+
+        while(true) {
+            System.out.println(mensaje);
+            input = entrada.nextLine().trim();
+            if(input.length() > 0) {   //Si ha metido un valor
+                if(input.equalsIgnoreCase("SI")) {
+                    return true;
+                }else if(input.equalsIgnoreCase("NO")) {
+                    return false;
+                }else {
+                    System.out.println("ERROR: Introduce SI o NO.");
+                }
+            } else {
+                System.out.println("ERROR: Entrada vacia. Introduce SI o NO.");
+            }
+        }   
     }
 }
