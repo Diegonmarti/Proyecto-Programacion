@@ -74,6 +74,18 @@ public abstract class MetodosComunes {
         }
     }
 
+    public static boolean conectarDB() {
+        MetodosComunes.cargarConfiguracion();
+        DBUtils.initParams(Config.getAddress(), Config.getDBName(), Config.getUsername(), Config.getPassword());
+
+        boolean conectado = DBUtils.connect(true);
+        if(conectado) {
+            DBUtils.executeSQLFile(Config.getSqlPath());
+        }
+
+        return conectado;
+    }
+
     public static String pedirNombre(String mensaje) {
         String input;
         while (true) {
@@ -121,6 +133,7 @@ public abstract class MetodosComunes {
         }
     }
 
+    // No se usa el trim() porque los espacios suelen importar en las contraseñas
     public static String pedirPassword(String mensaje, String mensajeRepetir, boolean repetir) {
         String input = "";
         String confirmacion = "";
@@ -128,7 +141,7 @@ public abstract class MetodosComunes {
 
         while (!fin) {
             System.out.print(mensaje);
-            input = entrada.nextLine().trim();
+            input = entrada.nextLine();
             if(input.length() > 0) {
                 if(input.length() > 8) {
                     if(repetir) {

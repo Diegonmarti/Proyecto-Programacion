@@ -7,12 +7,12 @@ import proyectotercera.utils.ISerializable;
 public class Hora implements ISerializable, Comparable<Hora> {
 
     private byte horaInicio;
-    private byte numAlumnos=0;
-    private String nomAlumno1="";//tanto nombre como apellidos
-    private int telAlumno1=0;
-    private String emailAlumno1="";
+    private byte numAlumnos = 0;
+    private String nomAlumno1 = "";//tanto nombre como apellidos
+    private int telAlumno1 = 0;
+    private String emailAlumno1 = "";
 
-   public Hora(byte horaInicio) {
+    public Hora(byte horaInicio) {
         this.horaInicio = horaInicio;
     }
    
@@ -94,7 +94,7 @@ public class Hora implements ISerializable, Comparable<Hora> {
         
         // Si hay algun alumno que haya reservado, incluirlo.
         if(this.numAlumnos > 0) {
-            out += "%C$" + this.nomAlumno1 + "$" + this.telAlumno1 + "$" + this.emailAlumno1+"\n";
+            out += "%C$" + this.nomAlumno1 + "$" + this.telAlumno1 + "$" + this.emailAlumno1 + "\n";
         }
         return out;
     }

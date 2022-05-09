@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import proyectotercera.utils.DBResult;
 import proyectotercera.utils.DBUtils;
 import proyectotercera.utils.FileUtils;
 import proyectotercera.utils.MetodosComunes;
@@ -17,20 +18,98 @@ public class Reservar {
 
     private static Reservas horario;
 
+    private static String nombre;
+    private static int telefono;
+    private static String email;
+    private static boolean invitado;
+
     public static void main(String[] args) {
         entrada = new Scanner(System.in);
         horario = new Reservas();
-
-        MetodosComunes.cargarConfiguracion();
-        DBUtils.initParams(Config.getAddress(), Config.getDBName(), Config.getUsername(), Config.getPassword());
         
         String palabra;
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println("> Programa de reservas de Tutorías >");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println();
-        //Hacer el Scanner que llame al fichero
         pedirArchivo();
+
+        if(MetodosComunes.conectarDB()) {
+            boolean hayUsuario = false;
+            boolean fin;
+            String input = "";
+            int inputTlf = -1;
+            String inputPassword;
+            while(!hayUsuario) {
+                fin = false;
+                while (!fin) {
+                    if(Config.getAllowGuests()) {
+                        System.out.print("Introduzca su email o telefono, o \"invitado\": ");
+                    }else {
+                        System.out.print("Introduzca su email o telefono: ");
+                    }
+                    input = entrada.nextLine().trim();
+                    if(input.length() > 0) {   //Si ha metido un valor
+                        try {
+                            if(input.equals("invitado") && Config.getAllowGuests()) { // es invitado (si se puede)
+                                invitado = true;
+                            }else if(!input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // no es un email
+                                inputTlf = Integer.parseInt(input);
+                            }
+                            fin = true;
+                        }catch(NumberFormatException e) {
+                            System.out.println("ERROR: Introduce un telefono o un email valido.");
+                            if(Config.getAllowGuests()) {
+                                System.out.println("O \"invitado\" para acceder sin iniciar sesión");
+                            }
+                        }
+                    } else {
+                        System.out.println("ERROR: Introduce un telefono o un email valido.");
+                        if(Config.getAllowGuests()) {
+                            System.out.println("O \"invitado\" para acceder sin iniciar sesión");
+                        }
+                    }
+                }
+
+                // Si es un invitado, no continues
+                if(invitado) break;
+
+                System.out.print("Introduzca su contraseña: ");
+                inputPassword = entrada.nextLine();
+
+                DBResult res;
+                String query = "SELECT nombre, tlf, email FROM alumnos WHERE ";
+                String queryEnd = " AND passwd = MD5(?)";
+                if(inputTlf == -1) {
+                    res = DBUtils.executeQuery(query + "email = ?" + queryEnd, input, inputPassword);
+                }else {
+                    res = DBUtils.executeQuery(query + "tlf = ?" + queryEnd, inputTlf, inputPassword);
+                }
+
+                if(!res.isError()) {
+                    hayUsuario = true;
+
+                    nombre = (String)res.get("nombre");
+                    email = (String)res.get("email");
+                    telefono = (Integer)res.get("tlf");
+                }else {
+                    System.out.println("ERROR: Los datos proporcionados no son correctos, vuelva a intentarlo.");
+                }
+            }
+
+            if(!invitado) {
+                System.out.println("Bienvenido " + nombre + "!");
+            }
+        }else {
+            // Si no se ha podido conectar a la base de datos, asumir invitado, si se permite
+            if(Config.getAllowGuests()) {
+                System.out.println("No se ha podido conectar con la base de datos. Entrará como invitado.");
+                invitado = true;
+            }else {
+                System.out.println("No se ha podido conectar con la base de datos. Saliendo del programa.");
+                return; // Salir del main
+            }
+        }
 
         do {
             System.out.print("Indica que acción quieres realizar: (RESERVAR, ANULAR, CONSULTAR o SALIR): ");
@@ -162,10 +241,12 @@ public class Reservar {
         }
         horaInicial = horas.get(indiceAux).getHoraInicio();
 
-        String nombre = MetodosComunes.pedirNombre("Indica tu nombre: ");
-        int telefono = MetodosComunes.pedirTelefono("Indica tu telefono: ");
-        String email = MetodosComunes.pedirEmail("Indica tu e-mail: ");
-        
+        if(invitado) {
+            nombre = MetodosComunes.pedirNombre("Indica tu nombre: ");
+            telefono = MetodosComunes.pedirTelefono("Indica tu telefono: ");
+            email = MetodosComunes.pedirEmail("Indica tu e-mail: ");
+        }
+
         int indiceDia = Dia.indice(horario.entradasDia, fechaReserva);
         int indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, horaInicial);
 
@@ -178,24 +259,28 @@ public class Reservar {
         boolean fin = false;
         String input;
         ArrayList<Cita> citas = new ArrayList<Cita>();
-        //CONTROLAR QUE LA ENTRADA O ES EMAIL O ES TELÉFONO
-        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.print("¿Qué email o teléfono tienes?");
-            input = entrada.nextLine().trim();
-            if(input.length() > 0) {   //Si ha metido un valor
-                try {
-                    if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
-                        citas = horario.buscarCitas(input);
-                    }else { // es un telefono
-                        citas = horario.buscarCitas(Integer.parseInt(input));
+        if(invitado) {
+            //CONTROLAR QUE LA ENTRADA O ES EMAIL O ES TELÉFONO
+            while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+                System.out.print("¿Qué email o teléfono tienes?");
+                input = entrada.nextLine().trim();
+                if(input.length() > 0) {   //Si ha metido un valor
+                    try {
+                        if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
+                            citas = horario.buscarCitas(input);
+                        }else { // es un telefono
+                            citas = horario.buscarCitas(Integer.parseInt(input));
+                        }
+                        fin = true;
+                    }catch(NumberFormatException e) {
+                        System.out.println("ERROR: Introduce un telefono o un email valido.");    
                     }
-                    fin = true;
-                }catch(NumberFormatException e) {
-                    System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                } else {
+                    System.out.println("ERROR: Introduce un telefono o un email valido.");
                 }
-            } else {
-                System.out.println("ERROR: Introduce un telefono o un email valido.");
             }
+        }else {
+            citas = horario.buscarCitas(telefono);
         }
 
         fin = false;
@@ -333,23 +418,27 @@ public class Reservar {
         String input;
         ArrayList<Cita> citas = new ArrayList<Cita>();
 
-        while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-            System.out.print("¿Qué email o teléfono tienes?");
-            input = entrada.nextLine().trim();
-            if(input.length() > 0) {   //Si ha metido un valor
-                try {
-                    if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
-                        citas = horario.buscarCitas(input);
-                    }else { // es un telefono
-                        citas = horario.buscarCitas(Integer.parseInt(input));
+        if(invitado) {
+            while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
+                System.out.print("¿Qué email o teléfono tienes?");
+                input = entrada.nextLine().trim();
+                if(input.length() > 0) {   //Si ha metido un valor
+                    try {
+                        if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
+                            citas = horario.buscarCitas(input);
+                        }else { // es un telefono
+                            citas = horario.buscarCitas(Integer.parseInt(input));
+                        }
+                        fin = true;
+                    }catch(NumberFormatException e) {
+                        System.out.println("ERROR: Introduce un telefono o un email valido.");    
                     }
-                    fin = true;
-                }catch(NumberFormatException e) {
-                    System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                } else {
+                    System.out.println("ERROR: Introduce un telefono o un email valido.");
                 }
-            } else {
-                System.out.println("ERROR: Introduce un telefono o un email valido.");
             }
+        }else {
+            citas = horario.buscarCitas(telefono);
         }
 
         if (citas.size() == 0) {

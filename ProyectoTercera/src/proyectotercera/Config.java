@@ -14,6 +14,10 @@ public class Config implements ISerializable {
     private static final String DEFAULT_DB_PASSWORD = "";
     private static final String DEFAULT_DBNAME = "horarios";
     private static final String DEFAULT_DB_SQLPATH = RUTA_CONFIG + "create.sql";
+    private static final boolean DEFAULT_ALLOW_GUESTS = true;
+
+    private static final String DB_PREFIX = "db.";
+    private static final String LOGIN_PREFIX = "login.";
 
     // Ajustes de la Base de Datos
     private static String address = DEFAULT_DB_ADDRESS;
@@ -21,6 +25,10 @@ public class Config implements ISerializable {
     private static String password = DEFAULT_DB_PASSWORD;
     private static String dbname = DEFAULT_DBNAME;
     private static String sqlPath = DEFAULT_DB_SQLPATH;
+
+    // Ajustes del login
+    private static boolean allowGuests = DEFAULT_ALLOW_GUESTS;
+    
 
     // Guardar una instancia de la clase para llamar a los métodos de ISerializable
     public static final Config INSTANCIA = new Config();
@@ -47,6 +55,10 @@ public class Config implements ISerializable {
     public static String getSqlPath() {
         return sqlPath;
     }
+    
+    public static boolean getAllowGuests() {
+        return allowGuests;
+    }
 
     public static String getConfigFilePath() {
         return RUTA_CONFIG + NOMBRE_CONFIG;
@@ -56,16 +68,18 @@ public class Config implements ISerializable {
     public String toSerializedData() {
         String out = "";
         out += "// La direccion del mysql al que conectarnos (default: " + DEFAULT_DB_ADDRESS + ")\n";
-        out += "db.address=" + address + "\n";
+        out += DB_PREFIX + "address=" + address + "\n";
         out += "// Los credenciales con los que conectarnos\n";
         out += "// Usuario (default: " + DEFAULT_DB_USERNAME + ")\n";
-        out += "db.username=" + username + "\n";
+        out += DB_PREFIX + "username=" + username + "\n";
         out += "// Password (default: " + DEFAULT_DB_PASSWORD + ")\n";
-        out += "db.password=" + password + "\n";
+        out += DB_PREFIX + "password=" + password + "\n";
         out += "// La base de datos a la que conectarnos (default: " + DEFAULT_DBNAME + ")\n";
-        out += "db.dbname=" + dbname + "\n";
+        out += DB_PREFIX + "dbname=" + dbname + "\n";
         out += "// La ruta al archivo .sql al que llamar si no existe la base de datos para crear la estructura de tablas (default: " + DEFAULT_DB_SQLPATH + ")\n";
-        out += "db.sqlfile=" + sqlPath + "\n";
+        out += DB_PREFIX + "sqlfile=" + sqlPath + "\n";
+        out += "// Permitir o no la entrada como invitado (default: " + DEFAULT_ALLOW_GUESTS + ")\n";
+        out += LOGIN_PREFIX + "allow_guests=" + allowGuests + "\n";
         return out;
     }
 
@@ -74,9 +88,9 @@ public class Config implements ISerializable {
         for(String line : data) {
             if(line.startsWith("//")) continue;
 
-            if(line.startsWith("db.")) {
+            if(line.startsWith(DB_PREFIX)) {
                 // Coge desde el final del prefijo "db." hasta el "=". Por ejemplo de "db.address=aa" coge "address"
-                String clave = line.substring(3, line.indexOf("="));
+                String clave = line.substring(DB_PREFIX.length(), line.indexOf("="));
                 // Coge solo el valor. Usando el ejemplo de arriba, cogería "aa"
                 String valor = line.substring(line.indexOf("=") + 1);
                 switch(clave) {
@@ -99,7 +113,19 @@ public class Config implements ISerializable {
                         break;
                 }
             }
+
+            if(line.startsWith(LOGIN_PREFIX)) {
+                String clave = line.substring(LOGIN_PREFIX.length(), line.indexOf("="));
+                String valor = line.substring(line.indexOf("=") + 1);
+                switch(clave) {
+                    case "allow_guests":
+                        allowGuests = Boolean.parseBoolean(valor);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
-        return 0;
+        return data.length;
     }
 }

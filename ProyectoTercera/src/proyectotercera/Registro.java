@@ -10,12 +10,7 @@ public class Registro {
 
     public static void main(String[] args) {
 
-        MetodosComunes.cargarConfiguracion();
-        DBUtils.initParams(Config.getAddress(), Config.getDBName(), Config.getUsername(), Config.getPassword());
-
-        if(DBUtils.connect(true)) {
-            DBUtils.executeSQLFile(Config.getSqlPath());
-
+        if(MetodosComunes.conectarDB()) {
             System.out.println("Bienvenido al programa de Registro de alumnos.");
             System.out.println("Por favor, siga las instrucciones a la hora de introducir los datos que se le piden.");
             System.out.println();

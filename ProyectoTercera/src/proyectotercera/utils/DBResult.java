@@ -21,6 +21,7 @@ public class DBResult {
         this.rs = rs;
         this.rsMetadata = rsMetadata;
         this.updateCount = updateCount;
+        this.next(); // Para que el primer get que se haga no sea null
     }
     
     public static DBResult fromStatement(PreparedStatement stmt) throws SQLException {

@@ -1,5 +1,13 @@
 package proyectotercera;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -7,8 +15,9 @@ import proyectotercera.utils.DBResult;
 import proyectotercera.utils.DBUtils;
 
 public class PruebasSQL {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         Scanner sc = new Scanner(System.in);
+
         DBUtils.initParams("localhost", "datos", "root", "");
         
         if(DBUtils.connect(true)) {
