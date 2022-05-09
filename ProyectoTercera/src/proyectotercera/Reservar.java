@@ -54,9 +54,13 @@ public class Reservar {
                     if(input.length() > 0) {   //Si ha metido un valor
                         if(input.equals("invitado") && Config.getAllowGuests()) { // es invitado (si se puede)
                             invitado = true;
+                            fin = true;
                         }else if(MetodosComunes.checkTelefono(input)) { // es un telefono
                             inputTlf = Integer.parseInt(input);
-                        }else if(!MetodosComunes.checkEmail(input)) { // NO es un mail -> error
+                            fin = true;
+                        }else if(MetodosComunes.checkEmail(input)) { // es un email
+                            fin = true;
+                        }else {
                             errorEntrada = true;
                         }
                     } else {

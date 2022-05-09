@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS alumnos (
+    id INT AUTO_INCREMENT UNIQUE,
+    nombre VARCHAR(50),
+    tlf INT UNIQUE,
+    email VARCHAR(60) PRIMARY KEY,
+    passwd VARCHAR(255)
+);
