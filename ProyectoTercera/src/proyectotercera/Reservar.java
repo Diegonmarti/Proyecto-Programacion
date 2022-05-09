@@ -22,6 +22,8 @@ public class Reservar {
     private static int telefono;
     private static String email;
     private static boolean invitado;
+    
+    private static boolean hechoCambios = false;
 
     public static void main(String[] args) {
         entrada = new Scanner(System.in);
@@ -129,15 +131,18 @@ public class Reservar {
                     // menuConsultar
                     break;
                 case "SALIR":
-                    System.out.println("Salir del programa");
                     break;
                 default:
                     System.out.println("Opción errónea...\n");
             }
         } while (!palabra.equals("SALIR"));
 
-        System.out.println("Por último, introduce el nombre de fichero de texto en el que quieres guardar tus reservas: ");
-        MetodosComunes.guardarArchivo(horario, "Introduce el nombre de fichero de texto en el que quieres guardar tus reservas: ");
+        if(hechoCambios) {
+            System.out.println("Por último, introduce el nombre de fichero de texto en el que quieres guardar tus reservas: ");
+            MetodosComunes.guardarArchivo(horario, "Introduce el nombre de fichero de texto en el que quieres guardar tus reservas: ");
+        }else {
+            System.out.println("No hubo cambios. Saliendo.");
+        }
     }
 
     private static void pedirArchivo() {
@@ -251,6 +256,7 @@ public class Reservar {
         int indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, horaInicial);
 
         horario.entradasDia.get(indiceDia).entradasHora.get(indiceHora).realizarReserva(nombre, telefono, email);
+        hechoCambios = true;
         //System.out.println("Perfecto, has reservado para");
         System.out.println("Reserva realizada con exito.");
     }
@@ -262,7 +268,7 @@ public class Reservar {
         if(invitado) {
             //CONTROLAR QUE LA ENTRADA O ES EMAIL O ES TELÉFONO
             while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-                System.out.print("¿Qué email o teléfono tienes?");
+                System.out.print("¿Qué email o teléfono tienes? ");
                 input = entrada.nextLine().trim();
                 if(input.length() > 0) {   //Si ha metido un valor
                     try {
@@ -395,7 +401,6 @@ public class Reservar {
             }
 
             int indiceDia = Dia.indice(horario.entradasDia, fechaReserva);
-            
             int indiceHora = Hora.indice(horario.entradasDia.get(indiceDia).entradasHora, horaInicial);
 
             Hora horaAnular = horario.entradasDia.get(indiceDia).entradasHora.get(indiceHora);
@@ -405,6 +410,7 @@ public class Reservar {
             
             if(anular) {
                 horaAnular.borrarReserva();
+                hechoCambios = true;
                 System.out.println("Perfecto. Reserva anulada.");
             }else {
                 System.out.println("Perfecto. Operación ANULAR cancelada.");
@@ -420,7 +426,7 @@ public class Reservar {
 
         if(invitado) {
             while (!fin) {  //Meter de todo menos fin para que meta algún valor y no se quede en blanco
-                System.out.print("¿Qué email o teléfono tienes?");
+                System.out.print("¿Qué email o teléfono tienes? ");
                 input = entrada.nextLine().trim();
                 if(input.length() > 0) {   //Si ha metido un valor
                     try {
