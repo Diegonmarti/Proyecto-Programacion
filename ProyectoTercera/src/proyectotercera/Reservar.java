@@ -34,7 +34,6 @@ public class Reservar {
         System.out.println("> Programa de reservas de Tutorías >");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println();
-        pedirArchivo();
 
         if(MetodosComunes.conectarDB()) {
             boolean hayUsuario = false;
@@ -112,6 +111,8 @@ public class Reservar {
                 return; // Salir del main
             }
         }
+
+        pedirArchivo();
 
         do {
             System.out.print("Indica que acción quieres realizar: (RESERVAR, ANULAR, CONSULTAR o SALIR): ");
