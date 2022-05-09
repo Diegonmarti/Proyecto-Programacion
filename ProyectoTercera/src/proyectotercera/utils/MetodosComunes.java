@@ -99,15 +99,26 @@ public abstract class MetodosComunes {
         }
     }
 
+    public static boolean checkTelefono(String telefono) {
+        int tlf;
+        try {
+            tlf = Integer.parseInt(telefono);
+            if(tlf > 0 && telefono.length() == 9) {
+                return true;
+            }
+        }catch(NumberFormatException e) {}
+        return false;
+    }
+
     public static int pedirTelefono(String mensaje) {
         String input;
         while (true) {
             System.out.print(mensaje);
             input = entrada.nextLine().trim();
             if(input.length() > 0) {
-                try {
+                if(checkTelefono(input)) {
                     return Integer.parseInt(input);
-                }catch(NumberFormatException e) {
+                }else {
                     System.out.println("ERROR: Introduzca un telefono valido.");
                 }
             } else {
@@ -116,13 +127,17 @@ public abstract class MetodosComunes {
         }
     }
 
+    public static boolean checkEmail(String email) {
+        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
+
     public static String pedirEmail(String mensaje) {
         String input;
         while (true) {
             System.out.print(mensaje);
             input = entrada.nextLine().trim();
             if(input.length() > 0) {
-                if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                if(checkEmail(input)) {
                     return input;
                 }else {
                     System.out.println("ERROR: Introduzca una dirección de e-mail valida.");

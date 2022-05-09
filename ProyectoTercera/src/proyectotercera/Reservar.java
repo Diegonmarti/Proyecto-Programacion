@@ -38,6 +38,7 @@ public class Reservar {
         if(MetodosComunes.conectarDB()) {
             boolean hayUsuario = false;
             boolean fin;
+            boolean errorEntrada = false;
             String input = "";
             int inputTlf = -1;
             String inputPassword;
@@ -51,24 +52,24 @@ public class Reservar {
                     }
                     input = entrada.nextLine().trim();
                     if(input.length() > 0) {   //Si ha metido un valor
-                        try {
-                            if(input.equals("invitado") && Config.getAllowGuests()) { // es invitado (si se puede)
-                                invitado = true;
-                            }else if(!input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // no es un email
-                                inputTlf = Integer.parseInt(input);
-                            }
-                            fin = true;
-                        }catch(NumberFormatException e) {
-                            System.out.println("ERROR: Introduce un telefono o un email valido.");
-                            if(Config.getAllowGuests()) {
-                                System.out.println("O \"invitado\" para acceder sin iniciar sesión");
-                            }
+                        if(input.equals("invitado") && Config.getAllowGuests()) { // es invitado (si se puede)
+                            invitado = true;
+                        }else if(MetodosComunes.checkTelefono(input)) { // es un telefono
+                            inputTlf = Integer.parseInt(input);
+                        }else if(!MetodosComunes.checkEmail(input)) { // NO es un mail -> error
+                            errorEntrada = true;
                         }
                     } else {
+                        errorEntrada = true;
+                    }
+
+                    // Separado para ahorrarnos el escribirlo dos veces
+                    if(errorEntrada) {
                         System.out.println("ERROR: Introduce un telefono o un email valido.");
                         if(Config.getAllowGuests()) {
                             System.out.println("O \"invitado\" para acceder sin iniciar sesión");
                         }
+                        errorEntrada = false;
                     }
                 }
 
@@ -272,15 +273,12 @@ public class Reservar {
                 System.out.print("¿Qué email o teléfono tienes? ");
                 input = entrada.nextLine().trim();
                 if(input.length() > 0) {   //Si ha metido un valor
-                    try {
-                        if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
-                            citas = horario.buscarCitas(input);
-                        }else { // es un telefono
-                            citas = horario.buscarCitas(Integer.parseInt(input));
-                        }
+                    if(MetodosComunes.checkEmail(input)) {
+                        citas = horario.buscarCitas(input);
                         fin = true;
-                    }catch(NumberFormatException e) {
-                        System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                    }else if(MetodosComunes.checkTelefono(input)) {
+                        citas = horario.buscarCitas(Integer.parseInt(input));
+                        fin = true;
                     }
                 } else {
                     System.out.println("ERROR: Introduce un telefono o un email valido.");
@@ -430,15 +428,12 @@ public class Reservar {
                 System.out.print("¿Qué email o teléfono tienes? ");
                 input = entrada.nextLine().trim();
                 if(input.length() > 0) {   //Si ha metido un valor
-                    try {
-                        if(input.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) { // es un email
-                            citas = horario.buscarCitas(input);
-                        }else { // es un telefono
-                            citas = horario.buscarCitas(Integer.parseInt(input));
-                        }
+                    if(MetodosComunes.checkEmail(input)) {
+                        citas = horario.buscarCitas(input);
                         fin = true;
-                    }catch(NumberFormatException e) {
-                        System.out.println("ERROR: Introduce un telefono o un email valido.");    
+                    }else if(MetodosComunes.checkTelefono(input)) {
+                        citas = horario.buscarCitas(Integer.parseInt(input));
+                        fin = true;
                     }
                 } else {
                     System.out.println("ERROR: Introduce un telefono o un email valido.");
