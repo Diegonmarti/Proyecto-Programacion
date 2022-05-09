@@ -143,7 +143,7 @@ public abstract class MetodosComunes {
             System.out.print(mensaje);
             input = entrada.nextLine();
             if(input.length() > 0) {
-                if(input.length() > 8) {
+                if(input.length() >= 8) {
                     if(repetir) {
                         // Pedir otra vez la contraseña para confirmar. Si coinciden, se termina, y si no, se vuelve a empezar
                         confirmacion = pedirPassword(mensajeRepetir, "", false);
